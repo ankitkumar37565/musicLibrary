@@ -1,29 +1,17 @@
-const { Sequelize } = require('sequelize');
-const { Umzug, SequelizeStorage } = require('umzug');
+const { exec } = require('child_process');
 
-const db = require('./models')
-const sequelize = db.sequelize;
-
-const runMigrations = async () => {
-  const umzug = new Umzug({
-    migrations: {
-      glob: 'migrations/*.js', 
-    },
-    storage: new SequelizeStorage({ sequelize }), 
-    context: sequelize.getQueryInterface(), 
-    logger: console, 
+const runSequelizeMigrations = async () => {
+  exec('npx sequelize-cli db:migrate', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing migration: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
   });
-
-  try {
-    
-    await umzug.up();
-    console.log('Migrations ran successfully!');
-  } catch (err) {
-    console.error('Error running migrations:', err);
-  }
 };
 
-
-(async () => {
-    await runMigrations();
-})();
+runSequelizeMigrations();
