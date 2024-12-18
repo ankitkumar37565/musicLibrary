@@ -1,0 +1,41 @@
+const express = require('express');
+const router = express.Router();
+const middleware = require('../middlewares/middleware')
+const UserController = require('../controllers/users');
+const userController = new UserController();
+const ArtistController = require('../controllers/artists');
+const artistController = new ArtistController();
+const AlbumController = require('../controllers/albums');
+const albumController = new AlbumController();
+const TrackController = require('../controllers/tracks');
+const trackController = new TrackController();
+const FavoriteController = require('../controllers/favourites');
+const favoriteController = new FavoriteController();
+
+
+router.get('/logout',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1,'Viewer':1}),userController.logout);
+router.post('/signup',userController.signup);
+router.post('/login',userController.login);
+router.get('/users',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),userController.getUsers);
+router.post('/users/add-user',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),userController.addUser);
+router.delete('/users/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),userController.deleteUsers);
+router.put('/users/update-password',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1,'Viewer':1}),userController.updatePassword);
+router.get('/artists',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Viewer':1}),artistController.artists);
+router.get('/artists/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Viewer':1}),artistController.getArtist);
+router.post('/artists/add-artist',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),artistController.addArtist);
+router.put('/artists/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1}),artistController.updateArtist);
+router.delete('/artists/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1}),artistController.deleteArtist);
+router.get('/albums',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Viewer':1}),albumController.getAlbums);
+router.get('/albums/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Viewer':1}),albumController.getAlbum);
+router.post('/albums/add-album',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),albumController.addAlbum);
+router.put('/albums/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1}),albumController.updateAlbum);
+router.delete('/albums/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1}),albumController.deleteAlbum);
+router.get('/tracks',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Viewer':1}),trackController.getTracks);
+router.get('/tracks/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Viewer':1}),trackController.getTrack);
+router.post('/tracks/add-track',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),trackController.addTrack);
+router.put('/tracks/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1}),trackController.updateTrack);
+router.delete('/tracks/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Editor':1}),trackController.deleteTrack);
+router.get('/favorites/:category',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1,'Viewer':1}),favoriteController.getFavorites);
+router.post('/favorites/add-favorite',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),favoriteController.addFavorite);
+router.delete('/favorites/remove-favorite/:id',middleware.authentication,middleware.roleBasedAccessControl({'Admin':1}),favoriteController.removeFavorite);
+module.exports= router;
