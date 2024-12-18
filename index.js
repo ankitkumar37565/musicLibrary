@@ -13,5 +13,3 @@ app.use((err,req,res,next)=>{
 app.listen(port,()=>{
     console.log('APP listening on port :',port)
 });
-// Run the migration to update Database
-require('./runmigration');

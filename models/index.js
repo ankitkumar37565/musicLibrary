@@ -11,9 +11,9 @@ const db = {};
 const initModels = require('./init-models')
 
 let sequelize;
-// if(process.env.DB_URL) {
-//   sequelize = new Sequelize(process.env.DB_URL)
-// }
+if(process.env.DB_URL) {
+  sequelize = new Sequelize(process.env.DB_URL)
+}
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
